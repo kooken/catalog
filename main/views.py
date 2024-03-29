@@ -10,5 +10,5 @@ def contacts(request):
         name = request.POST.get('name')
         phone = request.POST.get('phone')
         message = request.POST.get('message')
-        print(f"{name} {phone}: {message}")
+        print(f"Человечек {name} ввел свой номер телефона {phone} с таким сообщением {message}")
     return render(request, 'main/contacts.html')
