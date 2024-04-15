@@ -12,7 +12,6 @@ class Command(BaseCommand):
         Product.objects.all().delete()
 
         products_list = [
-            [
                 {
                     "product_name": "Personal Computer",
                     "product_description": "Description of Computers Product",
@@ -75,7 +74,7 @@ class Command(BaseCommand):
                 }
             ]
 
-        ]
+
         categories_list = [
             {"category_name": "Computers", "category_description": "Computers and peripherals"},
             {"category_name": "Electronics", "category_description": "Electronic devices and accessories"},
@@ -99,8 +98,12 @@ class Command(BaseCommand):
 
         products_for_create = []
         for product in products_list:
+            category = product.pop('product_category')
             products_for_create.append(
-                Product(**product)
-            )
+                Product(**product, product_category=Category.objects.get(
+                    category_name=category
+                )
+            ),
+        )
 
         Product.objects.bulk_create(products_for_create)
