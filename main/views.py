@@ -19,9 +19,10 @@ def index(request):
 
 def products(request, pk):
     context = {
-        'product_list': Product.objects.get(pk=pk),
+        'object': Product.objects.get(pk=pk),
+        'title': 'Product page',
     }
-    return render(request, 'main/index.html', context)
+    return render(request, 'main/products.html', context)
 
 
 def contacts(request):
