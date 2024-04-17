@@ -1,4 +1,5 @@
 {% extends 'main/base.html' %}
+{% load media_tag %}
 {% block content %}
 <div class="col-3">
     <div class="card mb-4 box-shadow">
@@ -6,7 +7,7 @@
             <h4 class="my-0 font-weight-normal">{{ object.product_name }}</h4>
         </div>
         <div class="card-body">
-            <img class="card-img-top" src="{{ media_tag object.product_image }}">
+            <img class="card-img-top" src="{{ object.product_image|media_tag}}">
             <h1 class="card-title pricing-card-title">{{ object.product_description }}</h1>
             <h1 class="card-title pricing-card-title">{{ object.product_price }} RUB</h1>
         </div>

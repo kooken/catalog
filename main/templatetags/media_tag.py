@@ -3,8 +3,8 @@ from django import template
 register = template.Library()
 
 
-@register.simple_tag
+@register.filter
 def media_tag(data):
     if data:
         return f'/media/{data}'
-    return '#'
+    return 'Картиночка не загрузилась...'
