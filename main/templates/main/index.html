@@ -1,16 +1,19 @@
 {% extends 'main/base.html' %}
 {% load media_tag %}
 {% block content %}
-<div class="col-3">
+<div class="row">
     {% for object in products_list %}
-    <div class="card mb-4 box-shadow">
-        <div class="card-header">
-            <h4 class="my-0 font-weight-normal">{{ object.product_name }}</h4>
-        </div>
-        <div class="card-body">
-            <h2 class="card-title pricing-card-title">{{ object.product_description|slice:5 }} ... </h2>
-            <h1 class="card-title pricing-card-title">{{ object.product_price }} RUB</h1>
-            <a href="{% url 'main:products' object.pk %}" class="btn btn-lg btn-block btn-outline-primary">Подробнее о товаре</a>
+    <div class="col-3">
+        <div class="card mb-4 box-shadow">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal">{{ object.product_name }}</h4>
+            </div>
+            <div class="card-body">
+                <h2 class="card-title pricing-card-title">{{ object.product_description|slice:5 }} ... </h2>
+                <h1 class="card-title pricing-card-title">{{ object.product_price }} RUB</h1>
+                <a href="{% url 'main:products' object.pk %}" class="btn btn-lg btn-block btn-outline-primary">Подробнее
+                    о товаре</a>
+            </div>
         </div>
     </div>
     {% endfor %}
