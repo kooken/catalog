@@ -9,8 +9,13 @@
     <div class="col-3">
         <div class="card mb-4 box-shadow">
             <div class="card-header">
-                <h4 class="my-0 font-weight-normal">{{ object.title }}</h4>
-            </div>
+            <p class="card-text">
+                {% if object.is_published %}
+                {{ object|title }}
+                {% else %}
+                <span class="text-muted">{{ object|title }}</span>
+                {% endif %}
+            </p>            </div>
             <div class="card-body">
                 <h2 class="card-title pricing-card-title">{{ object.content|slice:5 }} ... </h2>
                 <h4 class="card-title pricing-card-title">{{ object.date_of_creation }}</h4>

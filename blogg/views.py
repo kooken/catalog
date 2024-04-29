@@ -9,9 +9,14 @@ from blogg.models import BlogPost
 class BlogPostListView(ListView):
     model = BlogPost
 
+    def get_queryset(self, *args, **kwargs):
+        queryset = super().get_queryset(*args, **kwargs)
+        queryset = queryset.filter(is_published=True)
+        return queryset
+
 class BlogPostCreateView(CreateView):
     model = BlogPost
-    fields = ('title', 'content',)
+    fields = ('title', 'content', 'is_published', 'preview',)
     success_url = reverse_lazy('blogg:list')
 
     def form_valid(self, form):
@@ -24,7 +29,7 @@ class BlogPostCreateView(CreateView):
 
 class BlogPostUpdateView(UpdateView):
     model = BlogPost
-    fields = ('title', 'content',)
+    fields = ('title', 'content', 'is_published', 'preview',)
     # success_url = reverse_lazy('materials:list')
 
     def form_valid(self, form):
