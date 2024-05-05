@@ -14,8 +14,24 @@
             <div class="card-body">
                 <h2 class="card-title pricing-card-title">{{ object.product_description|slice:5 }} ... </h2>
                 <h1 class="card-title pricing-card-title">{{ object.product_price }} RUB</h1>
-                <a href="{% url 'main:products' object.pk %}" class="btn btn-lg btn-block btn-outline-primary">Подробнее
-                    о товаре</a>
+                <a href="{% url 'main:products' object.pk %}"
+                   class="btn btn-sm btn-outline-secondary">View full product</a>
+                <a href="{% url 'main:edit' object.pk %}" type="button"
+                   class="btn btn-sm btn-outline-secondary">Edit product</a>
+                <a href="{% url 'main:delete' object.pk %}"
+                   class="btn btn-sm btn-outline-danger">Delete product</a>
+                <a href="{% url 'main:create_version' %}"
+                   class="btn btn-sm btn-outline-danger">Add product version</a>
+                <a href="{% url 'main:update_version' object.pk %}"
+                   class="btn btn-sm btn-outline-danger">Change product version</a>
+            </div>
+            <div>
+                {% if object.version.exists %}
+                <p>Версия {{ object.version_name }}</p>
+                <p>Номер версии {{ object.version_no }}</p>
+                {% else %}
+                <p>Номер версии отсутствует</p>
+                {% endif %}
             </div>
         </div>
     </div>
