@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, TemplateView
+from django.views.generic import ListView, DetailView, TemplateView, CreateView
+from pytils.translit import slugify
 
+from main.forms import ProductForm
 from main.models import Product
 
 
@@ -33,6 +35,19 @@ class ProductDetailView(DetailView):
 #     }
 #     return render(request, 'main/product_detail.html', context)
 
+class ProductCreateView(CreateView):
+    model = Product
+    form_class = ProductForm
+    # fields = ('product_name', 'product_description', 'product_image', 'product_price', 'product_category',)
+    success_url = reverse_lazy('main:index')
+
+    def form_valid(self, form):
+        if form.is_valid():
+            new_post = form.save()
+            new_post.slug = slugify(new_post.product_name)
+            new_post.save()
+
+        return super().form_valid(form)
 
 class ContactsView(TemplateView):
     template_name = 'main/contacts.html'
