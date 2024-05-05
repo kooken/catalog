@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
 from pytils.translit import slugify
+from django.core.mail import send_mail
 
 # Create your views here.
 from blogg.models import BlogPost
@@ -47,13 +48,27 @@ class BlogPostUpdateView(UpdateView):
 class BlogPostDetailView(DetailView):
     model = BlogPost
 
+    @staticmethod
+    def send_notification(views_count):
+        send_mail(
+            subject='Blog',
+            message=f'Ваша статья достигла {views_count} просмотров!',
+            from_email="koooken@yandex.ru",
+            recipient_list=["metmaria23@gmail.com"]
+        )
+
     def get_object(self, queryset = None):
         self.object = super().get_object(queryset)
         self.object.views_count += 1
         self.object.save()
+
+        if self.object.views_count >= 2:
+            self.send_notification(self.object.views_count)
+
         return self.object
 
 
 class BlogPostDeleteView(DeleteView):
     model = BlogPost
     success_url = reverse_lazy('blogg:list')
+

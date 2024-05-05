@@ -18,23 +18,3 @@ class BlogPost(models.Model):
     class Meta:
         verbose_name = 'пост'
         verbose_name_plural = 'посты'
-# оздайте новую модель блоговой записи со следующими полями:
-# заголовок;
-# slug (реализовать через CharField);
-# содержимое;
-# превью (изображение);
-# дата создания;
-# признак публикации;
-# количество просмотров.
-# Для работы с блогом реализуйте CRUD для новой модели.
-# CRUD реализуйте на основе CBV (
-# ListView
-# ,
-# DetailView
-# ,
-# CreateView
-# ,
-# UpdateView
-# ,
-# DeleteView
-# ) Соблюдайте нейминг шаблонов для CBV контроллеров - …_list.html, …_detail.html, …_form.html.
