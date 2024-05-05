@@ -14,19 +14,46 @@ from main.models import Product, Version
 
 class ProductListView(ListView):
     model = Product
+    template_name = 'product_list.html'
 
-    def get_context_data(self,*args, **kwargs):
-        context_data = super().get_context_data(*args, **kwargs)
-        products = Product.objects.all()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        products = context['object_list']  # Получаем список продуктов из контекста
 
+        # Для каждого продукта получаем данные об активной версии
         for product in products:
-            versions = Version.objects.filter(product=product)
-            active_version = versions.filter(active_version=True)
-            if active_version:
-                product.version_name = active_version.last().version_name
-                product.version_no = active_version.last().version_no
-        context_data['object_list'] = products
-        return context_data
+            active_version = product.version.filter(active_version=True).first()
+            # Добавляем информацию об активной версии в контекст для каждого продукта
+            product.active_version = active_version
+
+        return context
+
+# class ProductListView(ListView):
+#     model = Product
+#
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         # Получаем объект Product, который отображается на странице
+#         product = self.get_object()
+#         # Получаем связанную с продуктом активную версию
+#         active_version = Version.objects.filter(product=product, active_version=True).first()
+#         # Добавляем информацию о версии в контекст страницы
+#         context['active_version'] = active_version
+#         return context
+
+    # def get_context_data(self,*args, **kwargs):
+    #     context_data = super().get_context_data(*args, **kwargs)
+    #     products = Product.objects.all()
+    #
+    #     for product in products:
+    #         versions = Version.objects.filter(product=product)
+    #         active_version = versions.filter(active_version=True)
+    #         if active_version:
+    #             product.version_name = active_version.last().version_name
+    #             product.version_no = active_version.last().version_no
+    #     context_data['object_list'] = products
+    #     return context_data
 
 # class ProductListView(ListView):
 #     model = Product
@@ -164,4 +191,4 @@ class VersionDetailView(DetailView):
 
 class VersionDeleteView(DeleteView):
     model = Version
-    success_url = reverse_lazy('catalog:versions')
+    success_url = reverse_lazy('main:index')

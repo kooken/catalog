@@ -49,21 +49,21 @@ class BlogPostDetailView(DetailView):
     model = BlogPost
 
     @staticmethod
-    def send_notification(views_count):
+    def send_notification(title, views_count):
         send_mail(
             subject='Blog',
-            message=f'Ваша статья достигла {views_count} просмотров!',
+            message=f'Ваша статья {title} достигла {views_count} просмотров!',
             from_email="koooken@yandex.ru",
             recipient_list=["metmaria23@gmail.com"]
         )
 
-    def get_object(self, queryset = None):
+    def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
         self.object.views_count += 1
         self.object.save()
 
         if self.object.views_count >= 2:
-            self.send_notification(self.object.views_count)
+            self.send_notification(self.object.title, self.object.views_count)
 
         return self.object
 
