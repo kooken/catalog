@@ -3,7 +3,15 @@ from django import forms
 from main.models import Product, Version
 
 
-class ProductForm(forms.ModelForm):
+class StyleFormMixin:
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+            if field_name == 'active_version':
+                field.widget.attrs['class'] = ' form-check-input'
+
+class ProductForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = Product
         # fields = '__all__'
@@ -17,24 +25,24 @@ class ProductForm(forms.ModelForm):
 
         for word in banned_words:
             if word in cleaned_data:
-                raise forms.ValidationError('В названии продукта присутствует запрещенное слово!')
+                raise forms.ValidationError(f'В названии продукта присутствует запрещенное слово {word}!')
 
         return cleaned_data
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control'
+    def clean_product_description(self):
+        cleaned_data = self.cleaned_data['product_description']
+        banned_words = ('казино', 'криптовалюта', 'крипта', 'биржа', 'дешево',
+                        'бесплатно', 'обман', 'полиция', 'радар')
+
+        for word in banned_words:
+            if word in cleaned_data:
+                raise forms.ValidationError(f'В описании продукта присутствует запрещенное слово {word}!')
+
+        return cleaned_data
 
 
-class VersionForm(forms.ModelForm):
+class VersionForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = Version
         fields = '__all__'
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control'
-            self.fields['active_version'].widget.attrs['class'] = 'form-check-input'
 

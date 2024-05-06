@@ -1,5 +1,4 @@
 {% extends 'main/base.html' %}
-{% load media_tag %}
 {% block content %}
 <div class="col-3">
     <div class="card mb-4 box-shadow">
@@ -9,6 +8,7 @@
         <div class="card-body">
             <h1 class="card-title pricing-card-title">{{ object.version_no }}</h1>
             <h1 class="card-title pricing-card-title">{{ object.version_name }}</h1>
+            <h1 class="card-title pricing-card-title">{{ object.active_version }}</h1>
         </div>
     </div>
 </div>

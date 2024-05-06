@@ -20,18 +20,12 @@
                    class="btn btn-sm btn-outline-secondary">Edit product</a>
                 <a href="{% url 'main:delete' object.pk %}"
                    class="btn btn-sm btn-outline-danger">Delete product</a>
-                <a href="{% url 'main:create_version' object.pk %}"
-                   class="btn btn-sm btn-outline-danger">Add product version</a>
-                <a href="{% url 'main:update_version' object.pk %}"
-                   class="btn btn-sm btn-outline-danger">Change product version</a>
-                <a href="{% url 'main:delete_version' object.pk %}"
-                   class="btn btn-sm btn-outline-danger">Delete product version</a>
                 <a href="{% url 'main:version_detail' object.pk %}"
                    class="btn btn-sm btn-outline-danger">View product version</a>
+                <a href="{% url 'main:create_version' object.pk %}"
+                   class="btn btn-sm btn-outline-danger">Create product version</a>
             </div>
             <div>
-                <h2>{{ object.product_name }}</h2>
-                <p>{{ object.product_description }}</p>
                 {% if object.active_version %}
                 <p>Активная версия: {{ object.active_version.version_name }}</p>
                 <!-- Другие данные об активной версии, если необходимо -->

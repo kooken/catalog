@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, DeleteView
 from pytils.translit import slugify
@@ -179,6 +179,22 @@ class VersionCreateView(CreateView):
     form_class = VersionForm
     success_url = reverse_lazy('main:index')
 
+    def form_valid(self, form):
+        # Получаем pk продукта из URL
+        product_pk = self.kwargs.get("pk")
+
+        # Проверяем, существует ли продукт с этим pk
+        product = get_object_or_404(Product, pk=product_pk)
+
+        # Добавляем связанный продукт к форме перед сохранением
+        form.instance.product = product
+
+        if form.is_valid():
+            new_version = form.save()
+            new_version.slug = slugify(new_version.version_name)
+            new_version.save()
+
+        return super().form_valid(form)
 
 class VersionUpdateView(UpdateView):
     model = Version
@@ -187,7 +203,7 @@ class VersionUpdateView(UpdateView):
 
 class VersionDetailView(DetailView):
     model = Version
-    context_object_name = 'versions'
+    # context_object_name = 'versions'
 
 class VersionDeleteView(DeleteView):
     model = Version
