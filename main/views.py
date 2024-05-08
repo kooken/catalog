@@ -164,13 +164,6 @@ class VersionListView(ListView):
     model = Version
 
     def get_queryset(self, *args, **kwargs):
-        # queryset = Version.objects.all()
-        # products = Product.objects.all()
-        # for product in products:
-        #     print(product)
-        #     versions = Version.objects.filter(product=product)
-        #     print(queryset.product == product)
-        #     return versions
         return Version.objects.filter(product=Product.objects.get(pk=self.kwargs.get('pk')))
 
 
@@ -180,20 +173,10 @@ class VersionCreateView(CreateView):
     success_url = reverse_lazy('main:index')
 
     def form_valid(self, form):
-        # Получаем pk продукта из URL
-        product_pk = self.kwargs.get("pk")
-
-        # Проверяем, существует ли продукт с этим pk
-        product = get_object_or_404(Product, pk=product_pk)
-
-        # Добавляем связанный продукт к форме перед сохранением
-        form.instance.product = product
-
         if form.is_valid():
-            new_version = form.save()
-            new_version.slug = slugify(new_version.version_name)
-            new_version.save()
-
+            product_pk = self.kwargs.get("pk")
+            product = get_object_or_404(Product, pk=product_pk)
+            form.instance.product = product
         return super().form_valid(form)
 
 class VersionUpdateView(UpdateView):

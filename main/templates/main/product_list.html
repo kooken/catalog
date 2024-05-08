@@ -20,10 +20,12 @@
                    class="btn btn-sm btn-outline-secondary">Edit product</a>
                 <a href="{% url 'main:delete' object.pk %}"
                    class="btn btn-sm btn-outline-danger">Delete product</a>
-                <a href="{% url 'main:version_detail' object.pk %}"
-                   class="btn btn-sm btn-outline-danger">View product version</a>
+                {% if object.active_version %}
+                <a href="{% url 'main:list_versions' object.pk %}"
+                   class="btn btn-sm btn-outline-secondary">View product version</a>
+                {% endif %}
                 <a href="{% url 'main:create_version' object.pk %}"
-                   class="btn btn-sm btn-outline-danger">Create product version</a>
+                   class="btn btn-sm btn-outline-secondary">Create product version</a>
             </div>
             <div>
                 {% if object.active_version %}

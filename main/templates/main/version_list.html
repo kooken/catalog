@@ -1,0 +1,25 @@
+{% extends 'main/base.html' %}
+{% block content %}
+{% for object in object_list %}
+<div class="col-3">
+    <div class="card mb-4 box-shadow">
+        <div class="card-header">
+            <h4 class="my-0 font-weight-normal">{{ object.product }}</h4>
+        </div>
+        <div class="card-body">
+            <h3 class="card-title pricing-card-title">Номер версии: {{ object.version_no }}</h3>
+            <h3 class="card-title pricing-card-title">Название версии: {{ object.version_name }}</h3>
+            <a href="{% url 'main:update_version' object.pk %}"
+               class="btn btn-sm btn-outline-secondary">Change product version</a>
+            <a href="{% url 'main:delete_version' object.pk %}"
+               class="btn btn-sm btn-outline-danger">Delete product version</a>
+            {% if object.active_version %}
+            <h4 class="card-title pricing-card-title" style="color: green">Активная версия</h4>
+            {% else %}
+            <h4 class="card-title pricing-card-title" style="color: grey">Неактивная версия</h4>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
