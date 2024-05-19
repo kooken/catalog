@@ -1,5 +1,5 @@
 {% extends 'main/base.html' %}
-{% load media_tag %}
+{% load blog_media_tag %}
 {% block content %}
 <div class="col-12 mb-5">
     <a class="btn btn-outline-primary" href="{% url 'blogg:create' %}">Добавить пост</a>
@@ -18,7 +18,7 @@
                 </p></div>
             <div class="card-body">
                 <h2 class="card-title pricing-card-title">{{ object.content|slice:5 }} ... </h2>
-                <img class="card-img-top" src="{{ object.preview|media_tag}}">
+                <img class="card-img-top" src="{{ object.preview|blog_media_tag}}">
                 <h4 class="card-title pricing-card-title">{{ object.date_of_creation }}</h4>
             </div>
             <div class="d-flex justify-content-between align-items-center">

@@ -4,7 +4,7 @@ register = template.Library()
 
 
 @register.filter
-def media_tag(data):
+def blog_media_tag(data):
     if data:
         return f'/media/{data}'
     return 'Картиночка не загрузилась...'
