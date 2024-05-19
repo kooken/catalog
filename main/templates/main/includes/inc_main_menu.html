@@ -4,5 +4,15 @@
         <a class="p-2 btn btn-outline-primary" href="{% url 'main:index' %}">Каталог</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'blogg:list' %}">Блог</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'main:contacts' %}">Контакты</a>
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'users:logout' %}">
+            {% csrf_token %}
+            <button class="btn btn-outline-primary" type="submit">Log Out</button>
+        </form>
+        <a class="p-2 btn btn-outline-primary" href="{% url 'users:profile' %}">Profile</a>
+        {% else %}
+        <a class="p-2 btn btn-outline-primary" href="{% url 'users:login' %}">Log In</a>
+        <a class="p-2 btn btn-outline-primary" href="{% url 'users:register' %}">Registration</a>
+        {% endif %}
     </nav>
 </div>
