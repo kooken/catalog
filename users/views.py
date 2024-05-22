@@ -1,14 +1,20 @@
+from django.contrib.auth.views import LoginView, PasswordResetView
 from django.core.mail import send_mail
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
-
+from config.settings import EMAIL_HOST_USER
 # Create your views here.
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView
 import secrets
-from users.forms import UserRegisterForm, UserProfileForm
+from users.forms import UserRegisterForm, UserProfileForm, UserLoginForm, UserRecoveryForm
 from users.models import User
-from config.settings import EMAIL_HOST_USER
+import random, string
+
+def generate_random_password(length=8):
+    characters = string.ascii_letters + string.digits + string.punctuation
+    return ''.join(random.choice(characters) for i in range(length))
 
 class RegisterView(CreateView):
     model = User
@@ -46,5 +52,38 @@ class ProfileView(UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+class UserLoginView(LoginView):
+    model = User
+    form_class = UserLoginForm
+    # redirect_authenticated_user = True
+    success_url = reverse_lazy('catalog:home')
+
+class UserPasswordResetView(PasswordResetView):
+    form_class = UserRecoveryForm
+    template_name = 'users/recovery_form.html'
+    success_url = reverse_lazy('users:login')
+
+    def form_valid(self, form):
+        if self.request.method == 'POST':
+            user_email = self.request.POST.get('email')
+            user = User.objects.filter(email=user_email).first()
+            if user:
+                new_password = generate_random_password()
+                user.set_password(new_password)
+                user.save()
+                try:
+                    send_mail(
+                        subject="Восстановление пароля",
+                        message=f"Здравствуйте! Ваш пароль для доступа на наш сайт изменен:\n"
+                                f"Данные для входа:\n"
+                                f"Email: {user_email}\n"
+                                f"Пароль: {new_password}",
+                        from_email=EMAIL_HOST_USER,
+                        recipient_list=[user.email]
+                    )
+                except Exception:
+                    print(f'Ошибка пр отправке письма, {user.email}')
+                return HttpResponseRedirect(reverse('users:login'))
 
 

@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, DeleteView
@@ -12,7 +13,7 @@ from main.models import Product, Version
 # def index(request):
 #     return render(request, 'main/product_list.html')
 
-class ProductListView(ListView):
+class ProductListView(ListView, LoginRequiredMixin):
     model = Product
     template_name = 'product_list.html'
 
@@ -82,7 +83,7 @@ class ProductListView(ListView):
 #     return render(request, 'main/product_list.html', context)
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(DetailView, LoginRequiredMixin):
     model = Product
     success_url = reverse_lazy('main:index')
 
@@ -93,19 +94,24 @@ class ProductDetailView(DetailView):
 #     }
 #     return render(request, 'main/product_detail.html', context)
 
-class ProductCreateView(CreateView):
+class ProductCreateView(CreateView, LoginRequiredMixin):
     model = Product
     form_class = ProductForm
     # fields = ('product_name', 'product_description', 'product_image', 'product_price', 'product_category',)
     success_url = reverse_lazy('main:index')
 
     def form_valid(self, form):
+        product = form.save()
+        user = self.request.user
+        product.owner = user
+        self.object.save()
         if form.is_valid():
             new_post = form.save()
             new_post.slug = slugify(new_post.product_name)
             new_post.save()
-
         return super().form_valid(form)
+
+
 
 
 class ProductUpdateView(UpdateView):
