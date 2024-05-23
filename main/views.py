@@ -104,7 +104,7 @@ class ProductCreateView(CreateView, LoginRequiredMixin):
         product = form.save()
         user = self.request.user
         product.owner = user
-        self.object.save()
+        product.save()
         if form.is_valid():
             new_post = form.save()
             new_post.slug = slugify(new_post.product_name)
