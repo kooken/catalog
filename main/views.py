@@ -13,7 +13,7 @@ from main.models import Product, Version
 # def index(request):
 #     return render(request, 'main/product_list.html')
 
-class ProductListView(ListView, LoginRequiredMixin):
+class ProductListView(LoginRequiredMixin, ListView):
     model = Product
     template_name = 'product_list.html'
 
@@ -110,8 +110,6 @@ class ProductCreateView(CreateView, LoginRequiredMixin):
             new_post.slug = slugify(new_post.product_name)
             new_post.save()
         return super().form_valid(form)
-
-
 
 
 class ProductUpdateView(UpdateView):

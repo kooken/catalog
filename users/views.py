@@ -11,7 +11,6 @@ import secrets
 from users.forms import UserRegisterForm, UserProfileForm, UserLoginForm, UserRecoveryForm
 from users.models import User
 import random, string
-import requests
 
 def generate_random_password(length=8):
     characters = string.ascii_letters + string.digits + string.punctuation
