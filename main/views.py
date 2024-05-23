@@ -8,96 +8,27 @@ from main.forms import ProductForm, VersionForm
 from main.models import Product, Version
 
 
-# Create your views here.
-
-# def index(request):
-#     return render(request, 'main/product_list.html')
-
 class ProductListView(LoginRequiredMixin, ListView):
     model = Product
     template_name = 'product_list.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        products = context['object_list']  # Получаем список продуктов из контекста
-
-        # Для каждого продукта получаем данные об активной версии
+        products = context['object_list']
         for product in products:
             active_version = product.version.filter(active_version=True).first()
-            # Добавляем информацию об активной версии в контекст для каждого продукта
             product.active_version = active_version
-
         return context
-
-# class ProductListView(ListView):
-#     model = Product
-#
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         # Получаем объект Product, который отображается на странице
-#         product = self.get_object()
-#         # Получаем связанную с продуктом активную версию
-#         active_version = Version.objects.filter(product=product, active_version=True).first()
-#         # Добавляем информацию о версии в контекст страницы
-#         context['active_version'] = active_version
-#         return context
-
-    # def get_context_data(self,*args, **kwargs):
-    #     context_data = super().get_context_data(*args, **kwargs)
-    #     products = Product.objects.all()
-    #
-    #     for product in products:
-    #         versions = Version.objects.filter(product=product)
-    #         active_version = versions.filter(active_version=True)
-    #         if active_version:
-    #             product.version_name = active_version.last().version_name
-    #             product.version_no = active_version.last().version_no
-    #     context_data['object_list'] = products
-    #     return context_data
-
-# class ProductListView(ListView):
-#     model = Product
-#
-#     def get_context_data(self, *args, **kwargs):
-#         context_data = super().get_context_data(*args, **kwargs)
-#         products = Product.objects.all()
-#
-#         for product in products:
-#             versions = Version.objects.filter(product=product)
-#             active_versions = versions.filter(active_version=True)
-#             if active_versions:
-#                 product.active_version = active_versions.last().version_name
-#             else:
-#                 product.active_version = 'Нет активной версии'
-#
-#         context_data['object_list'] = products
-#         return context_data
-
-# def index(request):
-#     products_list = Product.objects.all()
-#     context = {
-#         'products_list': products_list,
-#         'title': 'Main page',
-#     }
-#     return render(request, 'main/product_list.html', context)
 
 
 class ProductDetailView(DetailView, LoginRequiredMixin):
     model = Product
     success_url = reverse_lazy('main:index')
 
-# def products(request, pk):
-#     context = {
-#         'object': Product.objects.get(pk=pk),
-#         'title': 'Product page',
-#     }
-#     return render(request, 'main/product_detail.html', context)
 
 class ProductCreateView(CreateView, LoginRequiredMixin):
     model = Product
     form_class = ProductForm
-    # fields = ('product_name', 'product_description', 'product_image', 'product_price', 'product_category',)
     success_url = reverse_lazy('main:index')
 
     def form_valid(self, form):
@@ -115,7 +46,6 @@ class ProductCreateView(CreateView, LoginRequiredMixin):
 class ProductUpdateView(UpdateView):
     model = Product
     form_class = ProductForm
-    # fields = ('product_name', 'product_description', 'product_image', 'product_price', 'product_category',)
     success_url = reverse_lazy('main:index')
 
     def form_valid(self, form):
@@ -149,19 +79,6 @@ class ContactsView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Contacts'
         return context
-
-# def contacts(request):
-#     if request.method == 'POST':
-#         name = request.POST.get('name')
-#         phone = request.POST.get('phone')
-#         message = request.POST.get('message')
-#         print(f"Человечек {name} "
-#               f"ввел свой номер телефона {phone} "
-#               f"с таким сообщением {message}")
-#     context = {
-#             'title': 'Contacts',
-#         }
-#     return render(request, 'main/contacts.html', context)
 
 
 class VersionListView(ListView):
