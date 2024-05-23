@@ -11,6 +11,7 @@ import secrets
 from users.forms import UserRegisterForm, UserProfileForm, UserLoginForm, UserRecoveryForm
 from users.models import User
 import random, string
+import requests
 
 def generate_random_password(length=8):
     characters = string.ascii_letters + string.digits + string.punctuation
@@ -62,28 +63,22 @@ class UserLoginView(LoginView):
 class UserPasswordResetView(PasswordResetView):
     form_class = UserRecoveryForm
     template_name = 'users/recovery_form.html'
-    success_url = reverse_lazy('users:login')
 
     def form_valid(self, form):
-        if self.request.method == 'POST':
-            user_email = self.request.POST.get('email')
-            user = User.objects.filter(email=user_email).first()
-            if user:
-                new_password = generate_random_password()
-                user.set_password(new_password)
-                user.save()
-                try:
-                    send_mail(
-                        subject="Восстановление пароля",
-                        message=f"Здравствуйте! Ваш пароль для доступа на наш сайт изменен:\n"
-                                f"Данные для входа:\n"
-                                f"Email: {user_email}\n"
-                                f"Пароль: {new_password}",
-                        from_email=EMAIL_HOST_USER,
-                        recipient_list=[user.email]
-                    )
-                except Exception:
-                    print(f'Ошибка пр отправке письма, {user.email}')
-                return HttpResponseRedirect(reverse('users:login'))
+        user_email = self.request.POST.get('email')
+        user = get_object_or_404(User, email=user_email)
+        new_password = generate_random_password()
+        user.set_password(new_password)
+        user.save()
+        send_mail(
+            subject="Восстановление пароля",
+            message=f"Здравствуйте! Ваш пароль для доступа на наш сайт изменен:\n"
+                    f"Данные для входа:\n"
+                    f"Email: {user_email}\n"
+                    f"Пароль: {new_password}",
+            from_email=EMAIL_HOST_USER,
+            recipient_list=[user.email]
+        )
+        return redirect('users:login')
 
 
