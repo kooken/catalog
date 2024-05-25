@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
@@ -6,6 +7,8 @@ from django.core.mail import send_mail
 
 # Create your views here.
 from blogg.models import BlogPost
+from config.settings import EMAIL_HOST_USER
+
 
 class BlogPostListView(ListView):
     model = BlogPost
@@ -28,10 +31,10 @@ class BlogPostCreateView(CreateView):
 
         return super().form_valid(form)
 
-class BlogPostUpdateView(UpdateView):
+class BlogPostUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = BlogPost
+    permission_required = 'blogg.change_blogpost'
     fields = ('title', 'content', 'is_published', 'preview',)
-    # success_url = reverse_lazy('materials:list')
 
     def form_valid(self, form):
         if form.is_valid():
@@ -53,7 +56,7 @@ class BlogPostDetailView(DetailView):
         send_mail(
             subject='Blog',
             message=f'Ваша статья {title} достигла {views_count} просмотров!',
-            from_email="koooken@yandex.ru",
+            from_email=EMAIL_HOST_USER,
             recipient_list=["metmaria23@gmail.com"]
         )
 

@@ -79,5 +79,3 @@ class UserPasswordResetView(PasswordResetView):
             recipient_list=[user.email]
         )
         return redirect('users:login')
-
-

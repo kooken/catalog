@@ -18,6 +18,9 @@ class Category(models.Model):
         verbose_name = 'категория'
         verbose_name_plural = 'категории'
         ordering = ('category_name',)
+        permissions = [
+            ('can_edit_category_name', 'Can edit category name'),
+        ]
 
 
 class Product(models.Model):
@@ -29,6 +32,7 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Владелец', **NULLABLE)
+    is_published = models.BooleanField(default=False, verbose_name='опубликовано')
 
     def __str__(self):
         return f'{self.product_name} {self.product_description}'
@@ -37,6 +41,10 @@ class Product(models.Model):
         verbose_name = 'продукт'
         verbose_name_plural = 'продукты'
         ordering = ('product_name',)
+        permissions = [
+            ('can_edit_product_description', 'Can edit product description'),
+            ('can_edit_is_published', 'Can edit product publication'),
+        ]
 
 
 

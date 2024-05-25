@@ -9,7 +9,7 @@ class BlogPost(models.Model):
     content = models.TextField(verbose_name='содержимое')
     preview = models.ImageField(upload_to='posts/', verbose_name='изображение', **NULLABLE)
     date_of_creation = models.DateTimeField(auto_now_add=True)
-    is_published = models.BooleanField(default=True, verbose_name='опубликовано')
+    is_published = models.BooleanField(default=False, verbose_name='опубликовано')
     views_count = models.IntegerField(default=0, verbose_name='просмотры')
 
     def __str__(self):

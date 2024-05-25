@@ -16,8 +16,10 @@
                 <h1 class="card-title pricing-card-title">{{ object.product_price }} RUB</h1>
                 <a href="{% url 'main:products' object.pk %}"
                    class="btn btn-sm btn-outline-secondary">View full product</a>
+                {% if perms.main.can_edit_product_description and perms.main.can_edit_is_published or user == main.owner %}
                 <a href="{% url 'main:edit' object.pk %}" type="button"
                    class="btn btn-sm btn-outline-secondary">Edit product</a>
+                {% endif %}
                 <a href="{% url 'main:delete' object.pk %}"
                    class="btn btn-sm btn-outline-danger">Delete product</a>
                 {% if object.active_version %}

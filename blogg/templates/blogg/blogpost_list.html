@@ -25,10 +25,13 @@
                 <div class="btn-group">
                     <a href="{% url 'blogg:view' object.pk %}"
                        class="btn btn-sm btn-outline-secondary">View full post</a>
+
                     <a href="{% url 'blogg:edit' object.pk %}" type="button"
                        class="btn btn-sm btn-outline-secondary">Edit post</a>
+                    {% if perms.blogg.change_blogpost %}
                     <a href="{% url 'blogg:delete' object.pk %}"
                        class="btn btn-sm btn-outline-danger">Delete post</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
